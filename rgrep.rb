@@ -15,8 +15,19 @@ def  verify_combination(hash)
     end
     return false
 end
+def executeCommands(file_name, options, pattern)
+  if File.exist?(file_name)
+  file = File.open(file_name, "r")
+  else 
+    puts "File does not exist"
+    return
+  end
+  
+
+end
+
 #check if enough parameters have been passed
-if ARGV.length < 3
+if ARGV.length < 2
     puts "Missing required arguments"
     return
 end
@@ -30,30 +41,35 @@ else
 end
 #get options from command
 options_arr = ARGV.select{|x| x.start_with?("-")}
-# print options_arr.to_a, " is the option array \n"
 options = {:word_regex => false, :pattern_regex => false, :negative_regex => false, :conjunction_c=> false, :conjunction_m=> false}
-while !options_arr.empty? 
-  option = options_arr.shift
-  case option
-  when "-w"
-    options[:word_regex] = true
-  when "-p"
-    options[:pattern_regex] = true
-  when "-v"
-    options[:negative_regex] = true
-  when "-c"
-    options[:conjunction_c] = true
-  when "-m"
-    options[:conjunction_m] = true
-  else
-    puts "Invalid option"
-    return
+if !options_arr.empty?
+  while !options_arr.empty? 
+    option = options_arr.shift
+    case option
+    when "-w"
+      options[:word_regex] = true
+    when "-p"
+      options[:pattern_regex] = true
+    when "-v"
+      options[:negative_regex] = true
+    when "-c"
+      options[:conjunction_c] = true
+    when "-m"
+      options[:conjunction_m] = true
+    else
+      puts "Invalid option"
+      return
+    end
   end
+else
+  #default option if no options are passed
+  options[:pattern_regex] = true
 end
 # check if no options were passed, if so set pattern regex equals to true
 # # check for the pattern
 if !ARGV.empty?
-    pattern = ARGV.reject!{|x| x.start_with?("-")}
+    # pattern = ARGV.reject!{|x| x.start_with?("-")}
+    pattern = ARGV[-1]
 end
 # check for valid combination
 if options[:conjunction_c]== true || options[:conjunction_m] == true
@@ -62,9 +78,7 @@ if options[:conjunction_c]== true || options[:conjunction_m] == true
         return
     end
 end
-print file_name,"\n"
-print options.to_a ,"\n"
-print pattern.to_a ,"\n"
+executeCommands(file_name, options, pattern )
 
 
 
