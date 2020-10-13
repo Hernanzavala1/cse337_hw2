@@ -15,6 +15,23 @@ def  verify_combination(hash)
     end
     return false
 end
+def printResult(result)
+  result.each{
+    |line|
+    puts line
+  }
+  exit 1
+end
+def getResult(file, flag, pattern )
+  if flag == 'p'
+    return file.readlines.select{ |line| line.match pattern } 
+  elsif flag == 'w'
+  return  file.readlines.select{ |line|  line.match /\b#{Regexp.escape(pattern)}\b/  } 
+  elsif flag == 'v'
+    return file.readlines.reject{|line| line.match pattern }
+  end
+end
+
 def executeCommands(file_name, options, pattern)
   if File.exist?(file_name)
   file = File.open(file_name, "r")
@@ -22,10 +39,62 @@ def executeCommands(file_name, options, pattern)
     puts "File does not exist"
     return
   end
-  
+  options.each {
+    |key, value|
+    if value == true
+      case key
+      when :word_regex
+          if !options[:conjunction_c] && !options[:conjunction_m]
+            result = getResult(file, 'w', pattern)
+            printResult(result)
+          elsif options[:conjunction_c]
+            result = getResult(file, 'w', pattern)
+            puts result.length 
+            exit 1 
+          else 
+            file.readlines.each{
+               |line|
+                x =  line.match /\b#{Regexp.escape(pattern)}\b/
+                if x.class != NilClass
+                   puts x[0]
+                end
+              }
+              exit 1
+          end
+      when :pattern_regex
+            if !options[:conjunction_c] && !options[:conjunction_m]
+              result = getResult(file, 'p', pattern)
+              print "right before printing the result\n"
+              printResult(result)
+            elsif options[:conjunction_c]
+              result = getResult(file, 'p', pattern)
+              puts result.length 
+              exit 1 
+            else 
+               file.readlines.each{
+                  |line|
+                   x = line.match(pattern)
+                   if x.class != NilClass
+                      puts x[0]
+                   end
+              }
+              exit 1
+            end
+      when :negative_regex
+            result =  getResult(file, 'v', pattern)
+            if !options[:conjunction_c] 
+              printResult(result)
+            elsif options[:conjunction_c]
+              puts result.length 
+              exit 1 
+            end
+    
+      
+    end
+  end
+  }
 
 end
-
 #check if enough parameters have been passed
 if ARGV.length < 2
     puts "Missing required arguments"
@@ -41,6 +110,7 @@ else
 end
 #get options from command
 options_arr = ARGV.select{|x| x.start_with?("-")}
+# print options_arr, " is the option array \n"
 options = {:word_regex => false, :pattern_regex => false, :negative_regex => false, :conjunction_c=> false, :conjunction_m=> false}
 if !options_arr.empty?
   while !options_arr.empty? 
