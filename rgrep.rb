@@ -1,25 +1,13 @@
 def  verify_combination(hash)
     if hash[:conjunction_c] == true
-        if hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false
-            return false
-        else 
-            return true
-        end
-    end
-    if hash[:conjunction_m] == true
-        if hash[:word_regex]== false && hash[:pattern_regex]== false 
-            return false
-        else 
-            return true
-        end
-    end
-    return false
+      return false  if hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false 
+  elsif hash[:conjunction_m] == true
+       return false if hash[:word_regex]== false && hash[:pattern_regex]== false    
+  end
+    return true
 end
 def printResult(result)
-  result.each{
-    |line|
-    puts line
-  }
+  result.each{|line| puts line }
   exit 1
 end
 def getResult(file, flag, pattern )
@@ -64,7 +52,6 @@ def executeCommands(file_name, options, pattern)
       when :pattern_regex
             if !options[:conjunction_c] && !options[:conjunction_m]
               result = getResult(file, 'p', pattern)
-              print "right before printing the result\n"
               printResult(result)
             elsif options[:conjunction_c]
               result = getResult(file, 'p', pattern)
@@ -87,19 +74,20 @@ def executeCommands(file_name, options, pattern)
             elsif options[:conjunction_c]
               puts result.length 
               exit 1 
-            end
-    
-      
+            end  
     end
   end
   }
-
+  file.close
 end
 #check if enough parameters have been passed
 if ARGV.length < 2
     puts "Missing required arguments"
     return
 end
+# print ARGV.to_a, " before being stripped"
+# ARGV.each{|e| e.strip}
+# print ARGV.to_a, " after being stripped"
 # find the filename and remove it from the array
 file_name = ARGV.find{|x| x.end_with?(".txt")}
 if file_name == nil
@@ -110,7 +98,6 @@ else
 end
 #get options from command
 options_arr = ARGV.select{|x| x.start_with?("-")}
-# print options_arr, " is the option array \n"
 options = {:word_regex => false, :pattern_regex => false, :negative_regex => false, :conjunction_c=> false, :conjunction_m=> false}
 if !options_arr.empty?
   while !options_arr.empty? 
@@ -138,7 +125,6 @@ end
 # check if no options were passed, if so set pattern regex equals to true
 # # check for the pattern
 if !ARGV.empty?
-    # pattern = ARGV.reject!{|x| x.start_with?("-")}
     pattern = ARGV[-1]
 end
 # check for valid combination
