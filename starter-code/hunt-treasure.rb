@@ -142,19 +142,19 @@ class Player
         @sensed = {} # this is filled up in thee explore_room
         @encounter = {} # dictionary
         @actions = {} # dictionary of callbacks
-        @current_room= nil
+        @room= nil
     end
     def enter(room)
-        @current_room = room
+        @room = room
     end
     
     #check neighbors for hazards and see if i can sense the hazard and what to print 
     def explore_room
-        if !(@current_room.hazards.empty?)
+        if !(@room.hazards.empty?)
             puts "this room has a hazard "
-            @encounter[@current_room.hazards[0]].call
+            @encounter[@room.hazards[0]].call
         end
-        @current_room.neighbors.each{
+        @room.neighbors.each{
         |neighbor|
         if neighbor.hazards.empty? == false
             neighbor.hazards.each{
@@ -173,10 +173,28 @@ class Player
     def encounter(symbol, &block)
         @encounter[symbol] = block
     end
-    def action(symbol)
-        # @actions[symbol] = &block
+    def action(symbol, &block)
+        @actions[symbol] = block
     end
-
+    def act(symbol, room)
+        if @actions[symbol] != nil
+            @actions[symbol].call(room)
+        end
+    end
+ attr_reader :room
 end
+empty_room = Room.new(1)
+guard_room = Room.new(2)
+bats_room = Room.new(3)
+room4 = Room.new(4)
 
+empty_room.connect(guard_room)
+empty_room.connect(bats_room)
 
+# player = Player.new
+# player.enter(empty_room)
+# puts player.room.number , " original room"
+# player.action(:move) {|destination|player.enter(destination)}
+# player.act(:move, guard_room)
+# puts player.room.number , " new number"
+# puts player.room.number == guard_room.number
