@@ -9,7 +9,7 @@ class Room
         return @hazards.include?(symbol)
     end
     def add(symbol)
-        @hazards.append(symbol)
+         @hazards.append(symbol)
     end
     #check if the hazard is in the array first 
     def remove(symbol)
@@ -40,8 +40,9 @@ class Room
         return @neighbors[index]
     end
     def random_neighbor
-        values =@neighbors.values
-        return values[rand(values.size)] 
+        # values =@neighbors.values
+        # return values[rand(values.size)] 
+        return @neighbors.values.sample
     end
     def safeNeighbors
         result = true
@@ -95,7 +96,7 @@ class Cave
          return self.new(rooms)
      end
      def room(i)
-       rooms[i-1]
+       @rooms[i-1]
      end
      def random_room
          return @rooms.sample
@@ -103,7 +104,9 @@ class Cave
      #TODO check for existence of the hazard in the new room and also check if the new_room is in the cave 
      def move(symbol, room, new_room)
          room.remove(symbol)
+         if !(new_room.has?(symbol))
          new_room.add(symbol)
+         end
      end
      def add_hazard(symbol, number)
          count =0
@@ -119,7 +122,7 @@ class Cave
      def room_with(symbol)
          result = @rooms.select{
              |room|
-             room.has?(symbol)
+             room.has?(symbol) == true
          }
          if !(result.empty?) 
              return result[0]
@@ -136,31 +139,43 @@ class Cave
      attr_reader :rooms
      private :initialize
  end
+#  cave = Cave.dodecahedron
+#  rooms = cave.rooms
+#  cave.add_hazard(:guard, 1)
+# puts cave.room_with(:guard).has?(:guard) == true
+# #  room = cave.random_room
+# #  new_room = room.neighbors[1]
+# #  room.add(:pit)
+# #  puts room.has?(:pit)
+# #  puts new_room.has?(:pit) 
+# #  cave.move(:pit, room, new_room)
+# #  puts room.has?(:pit) 
+# #  puts new_room.has?(:pit) 
+
 require 'set'
 class Player 
     def initialize()
         @sensed = {} # this is filled up in thee explore_room
         @encounter = {} # dictionary
         @actions = {} # dictionary of callbacks
-        @room= nil
+        @room = nil
     end
     def enter(room)
-        @room = room
+        @room  = room
+        if room != nil && !(room.hazards.empty?)
+            @encounter[room.hazards[0]].call
+            return
+        end
     end
     
     #check neighbors for hazards and see if i can sense the hazard and what to print 
     def explore_room
-        if !(@room.hazards.empty?)
-            puts "this room has a hazard "
-            @encounter[@room.hazards[0]].call
-        end
         @room.neighbors.each{
         |neighbor|
-        if neighbor.hazards.empty? == false
+        if !(neighbor.hazards.empty?)
             neighbor.hazards.each{
                 |hazard|
                 @sensed[hazard].call # call the callback for the hazard 
-
             }
         end
         }
@@ -169,12 +184,15 @@ class Player
     #we will get the hazard and a callback to that hazard
     def sense(symbol, &block)
         @sensed[symbol] = block
+    
     end
     def encounter(symbol, &block)
         @encounter[symbol] = block
+     
     end
     def action(symbol, &block)
         @actions[symbol] = block
+        
     end
     def act(symbol, room)
         if @actions[symbol] != nil
@@ -183,14 +201,39 @@ class Player
     end
  attr_reader :room
 end
-empty_room = Room.new(1)
-guard_room = Room.new(2)
-bats_room = Room.new(3)
-room4 = Room.new(4)
+# player = Player.new
+# empty_room = Room.new(1)
+# guard_room = Room.new(2)
+# bats_room = Room.new(3)
 
-empty_room.connect(guard_room)
-empty_room.connect(bats_room)
+# room4 = Room.new(4)
+# sensed = Set.new
+# encountered = Set.new
 
+# empty_room.connect(guard_room)
+# empty_room.connect(bats_room)
+
+# player.sense(:bats) {sensed.add("You hear a rustling")}
+# player.sense(:guard) {sensed.add("You smell something terrible")}
+# player.encounter(:guard) {encountered.add("The guard killed you")}
+# player.encounter(:bats) {encountered.add("The bats whisked you away")}
+
+# player.action(:move) { |destination| player.enter(destination)}
+
+# player.enter(empty_room)
+# player.explore_room
+# puts sensed == Set["You hear a rustling", "You smell something terrible"]
+# puts encountered.empty? == true
+# player = Player.new
+# player.enter(bats_room)
+# encountered == Set["The bats whisked you away"]
+# puts sensed.empty? == true
+
+# # player = Player.new
+# player.act(:move, guard_room)
+# puts player.room.number == guard_room.number , " move "
+# puts encountered == Set["The guard killed you"]
+# puts sensed.empty? == true
 # player = Player.new
 # player.enter(empty_room)
 # puts player.room.number , " original room"
