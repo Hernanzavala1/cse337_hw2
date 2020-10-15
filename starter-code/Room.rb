@@ -17,15 +17,22 @@ class Room
     def empty?
         return @hazards.empty?
     end
+    def getHash
+        return @neighbors
+    end
     def connect(room)
         @neighbors[room.number] = room
         addExit(room.number)
-        room.neighbors[@number] = self
+        room.getHash[@number] = self
         room.addExit(@number)
     end
     def addExit(exitNumber)
         @exits.append(exitNumber)
     end
+    def neighbors
+        return @neighbors.values
+    end
+
     def neighbor(index)
         return @neighbors[index]
     end
@@ -50,24 +57,14 @@ class Room
             return false
         end
     end
-
-    attr_reader :number, :hazards, :neighbors, :exits
+    attr_reader :number, :hazards, :exits
 end
 room = Room.new(1)
 exit_numbers = [11, 3, 7]
 exit_numbers.each { |i|
 room.connect(Room.new(i))
 }
-# print exit_numbers.include?(room.random_neighbor.number)
-# neighbor = room.neighbors[7]
-# neighbor.neighbors.each{
-# |key, value|
-# puts "#{key}:#{value}"
-# }
 # exit_numbers.each { |i|
 #     print room.neighbor(i).number == i, "\n"
-#     print room.neighbor(i).neighbor(room.number) == room , "\n"
+#     print room.neighbor(i).neighbor(room.number) == room ,"\n"
 #     }
-
-room = Room.new(9)
-print room.safe?, "\n"
