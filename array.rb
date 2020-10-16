@@ -47,27 +47,8 @@ class Array
 
 end
 
-a	=	[1,2,34,5]
-puts a[1]
-puts a[10]	
-#  a.map(2..4)	{|i|i.to_f}	
-c = a.map	{	|i|	i.to_f}	
-print c.to_a, "\n"
 
 
-# b	=	["cat","bat","mat","sat"]
-# b[-1]	=	"sat"
-# b[5]	=	'\0'
-# b.map(2..10)	{	|x|	x[0].upcase	+	x[1,x.length]	}	
-#  b.map(2..4) {	|x|	x[0].upcase	+	x[1,x.length]	}	
-#  b.map(-3..-1) {	|x|	x[0].upcase	+ x[1,x.length]	}	
-# c = b.map{|x|x[0].upcase + x[1,x.length]}		
-# print c.to_a
 
-# b.map	{	|x|	x[0].upcase	+	x[1,x.length]	}
-# print "\n"
-# print a[10]	
-# puts 
-# b	=	["cat","bat","mat","sat"]
-# puts b[-1]	
-# puts b[5]	
+b	=	["cat","bat","mat","sat"]
+puts b[-5]
