@@ -6,10 +6,10 @@ class Room
         @exits = []
     end
     def has?(symbol)
-        return @hazards.include?(symbol)
+        if symbol != nil then return @hazards.include?(symbol) end
     end
     def add(symbol)
-         @hazards.append(symbol)
+        if symbol != nil then @hazards.append(symbol) end
     end
     #check if the hazard is in the array first 
     def remove(symbol)
@@ -40,8 +40,6 @@ class Room
         return @neighbors[index]
     end
     def random_neighbor
-        # values =@neighbors.values
-        # return values[rand(values.size)] 
         return @neighbors.values.sample
     end
     def safeNeighbors
