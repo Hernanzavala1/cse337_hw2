@@ -4,7 +4,7 @@ elsif hash[:conjunction_c] == true
       return false  if hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false 
   elsif hash[:conjunction_m] == true
        return false if hash[:word_regex]== false && hash[:pattern_regex]== false   
-  elsif hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex]) 
+  elsif (hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex])) or (hash[:pattern_regex]&& hash[:negative_regex])
     return false
   end
     return true
@@ -94,7 +94,7 @@ end
 # find the filename and remove it from the array
 file_name = ARGV.find{|x| x.end_with?(".txt")}
 if file_name == nil
-    puts "No file provided"
+    puts "Missing required arguments"
     return
 else 
     ARGV.delete_at(ARGV.find_index(file_name))
@@ -105,6 +105,7 @@ if options_arr.uniq.length < options_arr.length # check for duplicate options
   puts "Invalid combination of options"
   exit 1
 end
+second_ref = options_arr.uniq
 options = {:word_regex => false, :pattern_regex => false, :negative_regex => false, :conjunction_c=> false, :conjunction_m=> false}
 if !options_arr.empty?
   while !options_arr.empty? 
@@ -122,7 +123,7 @@ if !options_arr.empty?
       options[:conjunction_m] = true
     else
       puts "Invalid option"
-      return
+      exit
     end
   end
 else
@@ -134,12 +135,17 @@ end
 if !ARGV.empty?
     pattern = ARGV[-1]
 end
-#check all of the combinations
-if verify_combination(options) == false
-          puts "Invalid combination of options"
-          return
+    if (second_ref.include?("-c") || second_ref.include?("-m")) && second_ref.size == 1
+        options[:pattern_regex] = true
+        executeCommands(file_name, options, pattern ) 
+        exit 
+      elsif verify_combination(options) == true #check all of the combinations
+        executeCommands(file_name, options, pattern )   
+        exit 
+      else
+        puts "Invalid combination of options"
+          exit
       end
-executeCommands(file_name, options, pattern )
 
 
 
