@@ -4,7 +4,7 @@ elsif hash[:conjunction_c] == true
       return false  if hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false 
   elsif hash[:conjunction_m] == true
        return false if hash[:word_regex]== false && hash[:pattern_regex]== false   
-  elsif (hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex])) or (hash[:pattern_regex]&& hash[:negative_regex])
+  elsif (hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex])) or (hash[:pattern_regex] && hash[:negative_regex])
     return false
   end
     return true
@@ -87,6 +87,7 @@ def executeCommands(file_name, options, pattern)
   file.close
 end
 #check if enough parameters have been passed
+# print ARGV ," \n"
 if ARGV.length < 2
     puts "Missing required arguments"
     return

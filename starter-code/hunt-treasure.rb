@@ -137,20 +137,6 @@ class Cave
      attr_reader :rooms
      private :initialize
  end
-#  cave = Cave.dodecahedron
-#  rooms = cave.rooms
-#  cave.add_hazard(:guard, 1)
-# puts cave.room_with(:guard).has?(:guard) == true
-# #  room = cave.random_room
-# #  new_room = room.neighbors[1]
-# #  room.add(:pit)
-# #  puts room.has?(:pit)
-# #  puts new_room.has?(:pit) 
-# #  cave.move(:pit, room, new_room)
-# #  puts room.has?(:pit) 
-# #  puts new_room.has?(:pit) 
-
-require 'set'
 class Player 
     def initialize()
         @sensed = {} # this is filled up in thee explore_room
@@ -199,43 +185,3 @@ class Player
     end
  attr_reader :room
 end
-# player = Player.new
-# empty_room = Room.new(1)
-# guard_room = Room.new(2)
-# bats_room = Room.new(3)
-
-# room4 = Room.new(4)
-# sensed = Set.new
-# encountered = Set.new
-
-# empty_room.connect(guard_room)
-# empty_room.connect(bats_room)
-
-# player.sense(:bats) {sensed.add("You hear a rustling")}
-# player.sense(:guard) {sensed.add("You smell something terrible")}
-# player.encounter(:guard) {encountered.add("The guard killed you")}
-# player.encounter(:bats) {encountered.add("The bats whisked you away")}
-
-# player.action(:move) { |destination| player.enter(destination)}
-
-# player.enter(empty_room)
-# player.explore_room
-# puts sensed == Set["You hear a rustling", "You smell something terrible"]
-# puts encountered.empty? == true
-# player = Player.new
-# player.enter(bats_room)
-# encountered == Set["The bats whisked you away"]
-# puts sensed.empty? == true
-
-# # player = Player.new
-# player.act(:move, guard_room)
-# puts player.room.number == guard_room.number , " move "
-# puts encountered == Set["The guard killed you"]
-# puts sensed.empty? == true
-# player = Player.new
-# player.enter(empty_room)
-# puts player.room.number , " original room"
-# player.action(:move) {|destination|player.enter(destination)}
-# player.act(:move, guard_room)
-# puts player.room.number , " new number"
-# puts player.room.number == guard_room.number
