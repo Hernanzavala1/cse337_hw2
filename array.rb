@@ -17,16 +17,26 @@ class Array
     alias oldMap map 
     def map (sequence = nil, &block)
         result = []
+        temp = []
         if sequence == nil
             # call the old map 
             return self.oldMap(&block) 
         else 
             if sequence.class == Range && block_given? && sequence.all? { |x| x.is_a? Integer }
-                temp = slice(sequence)
-                if temp == nil
+                beginning  = self.size * -1
+                end_index = self.size - 1 
+                valid_indices = Range.new(beginning, end_index)
+                if (sequence.to_a & valid_indices.to_a).empty? == false
+                    sequence.each{|index|                    
+                        if self.[](index) != '\0'
+                            temp.append(self.[](index))
+                        end
+                    }
+                    temp.each{|element| result.push(yield(element))}
+                    return result
+                else
                     return []
                 end
-                temp.each{|x| result.push(yield(x))}
             else
                 raise "Type error"
                 return
@@ -35,5 +45,10 @@ class Array
         end
     end
 end
-b = [1,2,3,4,5,6]
-print b.map("a".."b"){|x| x + 1}, "\n"
+b =	["CAT", 'DOG', 'HELLO']
+print b.map(-3..-1){|i|	i.downcase} 
+
+
+# x = (-20..10)
+# y = (-6..5)
+# print (x.to_a & y.to_a).empty?
