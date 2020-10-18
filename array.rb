@@ -26,11 +26,10 @@ class Array
                 beginning  = self.size * -1
                 end_index = self.size - 1 
                 valid_indices = Range.new(beginning, end_index)
-                if (sequence.to_a & valid_indices.to_a).empty? == false
-                    sequence.each{|index|                    
-                        if self.[](index) != '\0'
-                            temp.append(self.[](index))
-                        end
+                common_indices = (sequence.to_a & valid_indices.to_a)
+                if common_indices.empty? == false
+                    common_indices.each{|index|                    
+                            temp.append(self.[](index))                    
                     }
                     temp.each{|element| result.push(yield(element))}
                     return result
@@ -41,14 +40,6 @@ class Array
                 raise "Type error"
                 return
             end
-         return result
         end
     end
 end
-b =	["CAT", 'DOG', 'HELLO']
-print b.map(-3..-1){|i|	i.downcase} 
-
-
-# x = (-20..10)
-# y = (-6..5)
-# print (x.to_a & y.to_a).empty?
