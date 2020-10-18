@@ -1,5 +1,4 @@
-# a = [1, 2, 34,5]
-# print a.size
+
 class Array
     alias old [] 
     def [](i)
@@ -10,17 +9,6 @@ class Array
         # get the interval for correct indices
         lowerBound = x * -1
        upperBound = x - 1
-        # if i.class == Range
-        #     start = i.begin
-        #     endIndex = i.end
-        #     if start < lowerBound || endIndex > upperBound
-        #         # return self
-        #         return '\0'
-        #     else 
-        #         return old(i)
-        #     end
-        # end
-       
        if i < lowerBound || i > upperBound
         return '\0'
        end
@@ -43,12 +31,4 @@ class Array
          return result
         end
     end
-
-
 end
-
-
-
-
-b	=	["cat","bat","mat","sat"]
-puts b[-5]
