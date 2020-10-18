@@ -133,9 +133,17 @@ else
 end
 # check if no options were passed, if so set pattern regex equals to true
 # # check for the pattern
+# print ARGV[0...(ARGV.length - 1)] , "\n"
+non_options = ARGV[0...(ARGV.length - 1)].reject{|x| x.start_with?("-")} # ARGV[0...ARGV.lenth -1 ] is the options interval
+if non_options.size >= 1 # check if the user passed in something other than an option and its trash
+  puts "invalid option"
+  exit 
+end
+
 if !ARGV.empty?
     pattern = ARGV[-1]
 end
+ 
     if (second_ref.include?("-c") || second_ref.include?("-m")) && second_ref.size == 1
         options[:pattern_regex] = true
         executeCommands(file_name, options, pattern ) 
