@@ -21,14 +21,19 @@ class Array
             # call the old map 
             return self.oldMap(&block) 
         else 
-            if sequence.class == Range && block_given?
+            if sequence.class == Range && block_given? && sequence.all? { |x| x.is_a? Integer }
                 temp = slice(sequence)
                 if temp == nil
                     return []
                 end
                 temp.each{|x| result.push(yield(x))}
+            else
+                raise "Type error"
+                return
             end
          return result
         end
     end
 end
+b = [1,2,3,4,5,6]
+print b.map("a".."b"){|x| x + 1}, "\n"
