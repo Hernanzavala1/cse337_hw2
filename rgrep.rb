@@ -1,9 +1,9 @@
 def  verify_combination(hash)
 if hash[:conjunction_c] && hash[:conjunction_m] then return false
 elsif hash[:conjunction_c] == true
-      return false  if hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false 
+  return false  if (hash[:word_regex]== false && hash[:pattern_regex]== false && hash[:negative_regex] == false) || ((hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex])) || ( hash[:pattern_regex] && hash[:negative_regex])) 
   elsif hash[:conjunction_m] == true
-       return false if hash[:word_regex]== false && hash[:pattern_regex]== false   
+    return false if (hash[:word_regex]== false && hash[:pattern_regex]== false) ||   hash[:negative_regex] 
   elsif (hash[:word_regex] && (hash[:pattern_regex] || hash[:negative_regex])) or (hash[:pattern_regex] && hash[:negative_regex])
     return false
   end
