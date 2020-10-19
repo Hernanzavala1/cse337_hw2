@@ -18,6 +18,7 @@ class Array
     def map (sequence = nil, &block)
         result = []
         temp = []
+        already_evaluated = Array.new(self.size, false)
         if sequence == nil
             # call the old map 
             return self.oldMap(&block) 
@@ -31,7 +32,12 @@ class Array
                     common_indices.each{|index|                    
                             temp.append(self.[](index))                    
                     }
-                    temp.each{|element| result.push(yield(element))}
+                    temp.each_with_index{|element, index|
+                        if   already_evaluated[index] == false 
+                            already_evaluated[index] = true
+                            result.push(yield(element))
+                        end
+                    }
                     return result
                 else
                     return []
